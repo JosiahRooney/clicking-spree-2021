@@ -1,47 +1,45 @@
 import { useState } from "react";
 import levels from "./levels";
-
-type TStat = "attackPower" | "critChance" | "recon" | "speed" | "health" | "maxHealth" | "armor";
-type TUnitId = "recruit" | "marksman" | "crewWeapon" | "infantryFightingVehicle" | "specialForcesOperative" | "heavyArmor" | "f15FighterJet" | "b1LancerBomber";
-type TUnit = {
-  id: string;
-  displayName: string;
-  count: number;
-  cost: number;
-  baseCost: number;
-  baseCostIncrease: number;
-  attackPower: {
-    low: number;
-    high: number;
-  }
-  critChance: {
-    low: number;
-    high: number;
-  }
-  unitCost: {
-    cost: number;
-    unit: string;
-  }
-}
+import { TUnit, TStat, TStatId, TUnitId } from "./Types";
 
 const GameData = () => {
   const [gameState, setGameState] = useState({
-    kills: 0,
+    kills: 50000,
     killsTotal: 0,
-    killsPerSecond: 0,
+    killsPerSecond: 1,
     killsPerClick: 1,
     experience: 0,
     level: 1,
-    expToNextLevel: 100,
+    skillPoints: 0,
+    skillPointsSpent: 0,
+    expToNextLevel: levels[2].exp + 1,
     expPerClick: 1,
     stats: {
-      attackPower: 1,
-      critChance: 0,
-      recon: 0,
-      speed: 0,
-      health: 100,
-      maxHealth: 100,
-      armor: 0,
+      attackPower: {
+        id: "attackPower",
+        displayName: "Attack Power",
+        description: "Increases your attack power (increases kills per click)",
+        value: 0,
+      } as TStat,
+      critChance: {
+        id: "critChance",
+        displayName: "Critical Chance",
+        description:
+          "Increases your critical chance (earn triple kills from one attack)",
+        value: 0,
+      } as TStat,
+      recon: {
+        id: "recon",
+        displayName: "Recon",
+        description: "Increases the amount of experience you earn per click",
+        value: 0,
+      } as TStat,
+      speed: {
+        id: "speed",
+        displayName: "Speed",
+        description: "Increases the rate at which you earn kills automatically",
+        value: 1,
+      } as TStat,
     },
     units: {
       recruit: {
@@ -59,7 +57,7 @@ const GameData = () => {
           low: 0,
           high: 0,
         },
-      },
+      } as TUnit,
       marksman: {
         id: "marksman",
         displayName: "Marksman",
@@ -79,7 +77,7 @@ const GameData = () => {
           cost: 1,
           unit: "recruit",
         },
-      },
+      } as TUnit,
       crewWeapon: {
         id: "crewWeapon",
         displayName: "Crew Weapon",
@@ -99,7 +97,7 @@ const GameData = () => {
           cost: 3,
           unit: "recruit",
         },
-      },
+      } as TUnit,
       infantryFightingVehicle: {
         id: "infantryFightingVehicle",
         displayName: "Infantry Fighting Vehicle",
@@ -119,7 +117,7 @@ const GameData = () => {
           cost: 5,
           unit: "recruit",
         },
-      },
+      } as TUnit,
       specialForcesOperative: {
         id: "specialForcesOperative",
         displayName: "Special Forces Operative",
@@ -139,7 +137,7 @@ const GameData = () => {
           cost: 1,
           unit: "marksman",
         },
-      },
+      } as TUnit,
       heavyArmor: {
         id: "heavyArmor",
         displayName: "Heavy Armor",
@@ -159,7 +157,7 @@ const GameData = () => {
           cost: 3,
           unit: "crewWeapon",
         },
-      },
+      } as TUnit,
       f15FighterJet: {
         id: "f15FighterJet",
         displayName: "F-15 Fighter Jet",
@@ -179,7 +177,7 @@ const GameData = () => {
           cost: 1,
           unit: "marksman",
         },
-      },
+      } as TUnit,
       b1LancerBomber: {
         id: "b1LancerBomber",
         displayName: "B-1 Lancer Bomber",
@@ -199,38 +197,57 @@ const GameData = () => {
           cost: 4,
           unit: "marksman",
         },
-      },
+      } as TUnit,
     },
   });
 
   const addKills = (delta?: number) => {
+    const kills =
+      gameState.kills +
+      gameState.killsPerClick +
+      gameState.stats.attackPower.value +
+      (delta || 0);
+    let experience =
+      gameState.experience +
+      gameState.expPerClick +
+      gameState.stats.recon.value +
+      (delta || 0);
+    let expToNextLevel = levels[gameState.level + 1].exp - gameState.experience;
+    let level = gameState.level;
+    let skillPoints = gameState.skillPoints;
+
+    if (expToNextLevel <= 0) {
+      // add level
+      level += 1;
+      // reset experience
+      experience = 0;
+      // reset expToNextLevel
+      expToNextLevel = levels[level + 1].exp + 1;
+      // add skill points
+      skillPoints += 1;
+    }
+
     setGameState({
       ...gameState,
-      kills: gameState.kills + gameState.killsPerClick + (delta || 0),
+      kills,
+      experience,
+      expToNextLevel,
+      level,
+      skillPoints,
     });
   };
 
-  const addExperience = (delta?: number) => {
+  const addStats = (stat: TStatId, value?: number) => {
     setGameState({
       ...gameState,
-      experience: gameState.experience + gameState.expPerClick + (delta || 0),
-    });
-  };
-
-  const addLevel = () => {
-    setGameState({
-      ...gameState,
-      level: gameState.level + 1,
-      expToNextLevel: gameState.expToNextLevel + levels[gameState.level].exp,
-    });
-  };
-
-  const addStats = (stat: TStat, delta?: number) => {
-    setGameState({
-      ...gameState,
+      skillPoints: gameState.skillPoints - 1,
+      skillPointsSpent: gameState.skillPointsSpent + 1,
       stats: {
         ...gameState.stats,
-        attackPower: gameState.stats[stat] + (delta || 0),
+        [stat]: {
+          ...gameState.stats[stat],
+          value: gameState.stats[stat].value + (value || 0),
+        },
       },
     });
   };
@@ -258,11 +275,10 @@ const GameData = () => {
 
   return {
     gameState,
+    setGameState,
     addKills,
-    addExperience,
-    addLevel,
     addStats,
     addUnit,
-  }
-}
+  };
+};
 export default GameData;
