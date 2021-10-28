@@ -3,6 +3,7 @@ export type TStatId = "attackPower" | "critChance" | "recon" | "speed";
 export interface TStat {
   id: TStatId;
   displayName: string;
+  description: string;
   value: number;
 }
 
@@ -18,6 +19,7 @@ export type TUnitId =
 
 export type TUnit = {
   id: TUnitId;
+  displayed: boolean;
   displayName: string;
   count: number;
   cost: number;
@@ -34,5 +36,34 @@ export type TUnit = {
   unitCost: {
     cost: number;
     unit: string;
+  };
+};
+
+export type TGameState = {
+  kills: number;
+  killsTotal: number;
+  killsPerSecond: number;
+  killsPerClick: number;
+  experience: number;
+  level: number;
+  skillPoints: number;
+  skillPointsSpent: number;
+  expToNextLevel: number;
+  expPerClick: number;
+  stats: {
+    attackPower: TStat;
+    critChance: TStat;
+    recon: TStat;
+    speed: TStat;
+  };
+  units: {
+    recruit: TUnit;
+    marksman: TUnit;
+    crewWeapon: TUnit;
+    infantryFightingVehicle: TUnit;
+    specialForcesOperative: TUnit;
+    heavyArmor: TUnit;
+    f15FighterJet: TUnit;
+    b1LancerBomber: TUnit;
   };
 };

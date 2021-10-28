@@ -1,13 +1,13 @@
 import { useState } from "react";
 import levels from "./levels";
-import { TUnit, TStat, TStatId, TUnitId } from "./Types";
+import { TUnit, TStatId, TUnitId, TGameState } from "./Types";
 
 const GameData = () => {
-  const [gameState, setGameState] = useState({
+  const [gameState, setGameState] = useState<TGameState>({
     kills: 0,
     killsTotal: 0,
     killsPerSecond: 0,
-    killsPerClick: 1,
+    killsPerClick: 100,
     experience: 0,
     level: 1,
     skillPoints: 10,
@@ -20,26 +20,26 @@ const GameData = () => {
         displayName: "Attack Power",
         description: "Increases your attack power (increases kills per click)",
         value: 0,
-      } as TStat,
+      },
       critChance: {
         id: "critChance",
         displayName: "Critical Chance",
         description:
           "Increases your critical chance (earn triple kills from one attack)",
         value: 0,
-      } as TStat,
+      },
       recon: {
         id: "recon",
         displayName: "Recon",
         description: "Increases the amount of experience you earn per click",
         value: 0,
-      } as TStat,
+      },
       speed: {
         id: "speed",
         displayName: "Speed",
         description: "Increases the rate at which you earn kills automatically",
         value: 100,
-      } as TStat,
+      },
     },
     units: {
       recruit: {
@@ -48,10 +48,11 @@ const GameData = () => {
         count: 0,
         cost: 15,
         baseCost: 15,
+        displayed: true,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 0,
-          high: 0.1,
+          low: 1,
+          high: 1.5,
         },
         critChance: {
           low: 0,
@@ -64,10 +65,11 @@ const GameData = () => {
         count: 0,
         cost: 100,
         baseCost: 100,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 0.5,
-          high: 1,
+          low: 2,
+          high: 5,
         },
         critChance: {
           low: 0.1,
@@ -84,10 +86,11 @@ const GameData = () => {
         count: 0,
         cost: 1000,
         baseCost: 1000,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 3.3,
-          high: 4.5,
+          low: 10,
+          high: 20,
         },
         critChance: {
           low: 0.5,
@@ -104,10 +107,11 @@ const GameData = () => {
         count: 0,
         cost: 4200,
         baseCost: 4200,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 10,
-          high: 15,
+          low: 50,
+          high: 100,
         },
         critChance: {
           low: 0.5,
@@ -124,10 +128,11 @@ const GameData = () => {
         count: 0,
         cost: 14000,
         baseCost: 14000,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 40,
-          high: 50,
+          low: 100,
+          high: 200,
         },
         critChance: {
           low: 10,
@@ -144,10 +149,11 @@ const GameData = () => {
         count: 0,
         cost: 60000,
         baseCost: 60000,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 100,
-          high: 150,
+          low: 200,
+          high: 400,
         },
         critChance: {
           low: 1,
@@ -164,10 +170,11 @@ const GameData = () => {
         count: 0,
         cost: 300000,
         baseCost: 300000,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
-          low: 400,
-          high: 500,
+          low: 500,
+          high: 750,
         },
         critChance: {
           low: 10,
@@ -184,6 +191,7 @@ const GameData = () => {
         count: 0,
         cost: 1000000,
         baseCost: 1000000,
+        displayed: false,
         baseCostIncrease: 1.07,
         attackPower: {
           low: 4000,

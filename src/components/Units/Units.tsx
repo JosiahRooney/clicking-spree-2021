@@ -1,18 +1,30 @@
 import React from "react";
-import { TUnitId } from "../../data/Types";
+import { TGameState, TUnitId } from "../../data/Types";
 import Unit from "./Unit";
 
 interface IProps {
-  gameState: any;
+  gameState: TGameState;
   addUnit: (unitId: TUnitId) => void;
 }
 
 const Units: React.FC<IProps> = ({ gameState, addUnit }) => {
+  const units = [];
+  for (const [, unit] of Object.entries(gameState.units)) {
+    units.push(
+      <Unit
+        key={unit.id}
+        unit={unit}
+        addUnit={addUnit}
+        kills={gameState.kills}
+      />
+    );
+  }
+
   return (
     <div>
       <h2>Units</h2>
 
-      <Unit unit={gameState.units.recruit} addUnit={addUnit} />
+      <div className="units">{units}</div>
     </div>
   );
 };

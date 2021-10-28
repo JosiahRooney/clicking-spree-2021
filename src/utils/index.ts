@@ -1,3 +1,4 @@
 import formatNumber from "./formatNumber";
+import randomIntInRange from "./randomIntInRange";
 
-export { formatNumber };
+export { formatNumber, randomIntInRange };
