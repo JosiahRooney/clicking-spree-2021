@@ -15,14 +15,16 @@ function App() {
         ...prevGameState,
         kills: prevGameState.kills + prevGameState.killsPerSecond,
       }));
-    }, gameState.stats.speed.value * 1000);
+    }, 10 * gameState.stats.speed.value);
 
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="App">
       <Header gameState={gameState} addStats={addStats} addKills={addKills} />
+      {10 * gameState.stats.speed.value}
       <Game gameState={gameState} addUnit={addUnit} addStats={addStats} />
     </div>
   );

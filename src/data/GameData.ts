@@ -4,13 +4,13 @@ import { TUnit, TStat, TStatId, TUnitId } from "./Types";
 
 const GameData = () => {
   const [gameState, setGameState] = useState({
-    kills: 50000,
+    kills: 0,
     killsTotal: 0,
     killsPerSecond: 1,
     killsPerClick: 1,
     experience: 0,
     level: 1,
-    skillPoints: 0,
+    skillPoints: 10,
     skillPointsSpent: 0,
     expToNextLevel: levels[2].exp + 1,
     expPerClick: 1,
@@ -38,7 +38,7 @@ const GameData = () => {
         id: "speed",
         displayName: "Speed",
         description: "Increases the rate at which you earn kills automatically",
-        value: 1,
+        value: 100,
       } as TStat,
     },
     units: {

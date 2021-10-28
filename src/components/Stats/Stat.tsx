@@ -12,7 +12,8 @@ const Stat: React.FC<IProps> = ({ statId, gameState, addStats }) => {
   const stat = stats[statId];
 
   const handleAddStats = () => {
-    addStats(statId, 1);
+    const delta = statId === "speed" ? -0.5 : 1;
+    addStats(statId, delta);
   };
 
   return (
