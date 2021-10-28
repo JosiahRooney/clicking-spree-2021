@@ -4,6 +4,8 @@ import levels from "../../data/levels";
 
 import { formatNumber } from "../../utils";
 
+import "./Header.scss";
+
 interface IProps {
   gameState: any;
   addKills: (delta?: number) => void;
@@ -12,9 +14,10 @@ interface IProps {
 
 const Header: React.FC<IProps> = ({ gameState, addKills }) => {
   const {
-    kills,
+    stats: { attackPower },
     experience,
     expToNextLevel,
+    kills,
     killsPerClick,
     killsPerSecond,
     level,
@@ -49,7 +52,7 @@ const Header: React.FC<IProps> = ({ gameState, addKills }) => {
           <div className="Header-stat">
             <span className="Header-stat-label">KPC</span>
             <span className="Header-stat-value">
-              {formatNumber(killsPerClick)}
+              {formatNumber(killsPerClick + attackPower.value)}
             </span>
           </div>
           <div className="Header-stat">
@@ -67,8 +70,7 @@ const Header: React.FC<IProps> = ({ gameState, addKills }) => {
         </div>
       </div>
       <div className="Header-level">
-        <span className="Header-level-label">Level</span>
-        <span className="Header-level-value">{level}</span>
+        <span className="Header-level-label">Level {level}</span>
         <progress
           className="Header-level-progress"
           value={experience}

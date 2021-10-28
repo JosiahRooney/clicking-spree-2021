@@ -17,7 +17,7 @@ export type TUnitId =
   | "b1LancerBomber";
 
 export type TUnit = {
-  id: string;
+  id: TUnitId;
   displayName: string;
   count: number;
   cost: number;
