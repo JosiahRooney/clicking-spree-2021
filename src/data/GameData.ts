@@ -7,7 +7,7 @@ const GameData = () => {
     kills: 0,
     killsTotal: 0,
     killsPerSecond: 0,
-    killsPerClick: 100,
+    killsPerClick: 1,
     experience: 0,
     level: 1,
     skillPoints: 10,
