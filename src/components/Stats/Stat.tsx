@@ -20,7 +20,7 @@ const Stat: React.FC<IProps> = ({ statId, gameState, addStats }) => {
       <h3>{stat.displayName}</h3>
       <p>{stat.description}</p>
       <p>{stat.value}</p>
-      {skillPoints > 0 && <button onClick={handleAddStats}>+1</button>}
+      {skillPoints > 0 && <button onClick={handleAddStats}>Add</button>}
     </div>
   );
 };

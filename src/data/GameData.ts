@@ -4,9 +4,9 @@ import { TUnit, TStat, TStatId, TUnitId } from "./Types";
 
 const GameData = () => {
   const [gameState, setGameState] = useState({
-    kills: 50000,
+    kills: 0,
     killsTotal: 0,
-    killsPerSecond: 1,
+    killsPerSecond: 0,
     killsPerClick: 1,
     experience: 0,
     level: 1,
