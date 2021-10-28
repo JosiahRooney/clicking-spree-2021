@@ -59,7 +59,6 @@ function App() {
   return (
     <div className="App">
       <Header gameState={gameState} addStats={addStats} addKills={addKills} />
-      {10 * gameState.stats.speed.value}
       <Game gameState={gameState} addUnit={addUnit} addStats={addStats} />
     </div>
   );
