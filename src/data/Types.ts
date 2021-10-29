@@ -35,14 +35,18 @@ export type TUnit = {
   };
   unitCost: {
     cost: number;
-    unit: string;
+    unit: TUnitId;
+    unitDisplayName: string;
   };
 };
 
 export type TGameState = {
   kills: number;
   killsTotal: number;
-  killsPerSecond: number;
+  killsPerSecond: {
+    low: number;
+    high: number;
+  };
   killsPerClick: number;
   experience: number;
   level: number;

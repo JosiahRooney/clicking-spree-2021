@@ -50,8 +50,7 @@ function App() {
   useInterval(() => {
     setGameState((prevGameState) => ({
       ...prevGameState,
-      kills:
-        prevGameState.kills + prevGameState.killsPerSecond + addUnitKills(),
+      kills: prevGameState.kills + addUnitKills(),
       units: setUnitDisplay(prevGameState),
     }));
   }, 10 * gameState.stats.speed.value);

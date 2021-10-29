@@ -46,7 +46,8 @@ const Header: React.FC<IProps> = ({ gameState, addKills }) => {
           <div className="Header-stat">
             <span className="Header-stat-label">KPS</span>
             <span className="Header-stat-value">
-              {formatNumber(killsPerSecond)}
+              {formatNumber(killsPerSecond.low)} -{" "}
+              {formatNumber(killsPerSecond.high)}
             </span>
           </div>
           <div className="Header-stat">

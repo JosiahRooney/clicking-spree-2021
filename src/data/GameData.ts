@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import levels from "./levels";
 import { TUnit, TStatId, TUnitId, TGameState } from "./Types";
 
@@ -6,11 +6,14 @@ const GameData = () => {
   const [gameState, setGameState] = useState<TGameState>({
     kills: 0,
     killsTotal: 0,
-    killsPerSecond: 0,
+    killsPerSecond: {
+      low: 0,
+      high: 0,
+    },
     killsPerClick: 1,
     experience: 0,
     level: 1,
-    skillPoints: 10,
+    skillPoints: 0,
     skillPointsSpent: 0,
     expToNextLevel: levels[2].exp + 1,
     expPerClick: 1,
@@ -260,26 +263,80 @@ const GameData = () => {
     });
   };
 
+  const getKPSFromAllUnits = (gameState: TGameState) => {
+    let kps = {
+      low: 0,
+      high: 0,
+    };
+    for (const [, unit] of Object.entries(gameState.units)) {
+      kps.low += unit.count * unit.attackPower.low;
+      kps.high += unit.count * unit.attackPower.high;
+    }
+    return kps;
+  };
+
   const addUnit = (id: TUnitId) => {
     const { kills } = gameState;
     const unit = gameState.units[id];
     const { cost, baseCost, baseCostIncrease } = unit;
 
     if (kills >= cost) {
-      setGameState({
-        ...gameState,
-        kills: kills - cost,
-        units: {
-          ...gameState.units,
-          [id]: {
-            ...unit,
-            count: unit.count + 1,
-            cost: Math.floor(baseCost * Math.pow(baseCostIncrease, unit.count)),
+      if (unit.unitCost) {
+        if (gameState.units[unit.unitCost.unit].count >= unit.unitCost.cost) {
+          setGameState({
+            ...gameState,
+            kills: kills - cost,
+            units: {
+              ...gameState.units,
+              [id]: {
+                ...unit,
+                count: unit.count + 1,
+                cost: Math.floor(
+                  baseCost * Math.pow(baseCostIncrease, unit.count)
+                ),
+              },
+              [gameState.units[unit.unitCost.unit].id]: {
+                ...gameState.units[unit.unitCost.unit],
+                count:
+                  gameState.units[unit.unitCost.unit].count -
+                  unit.unitCost.cost,
+                cost: Math.floor(
+                  gameState.units[unit.unitCost.unit].baseCost *
+                    Math.pow(
+                      baseCostIncrease,
+                      gameState.units[unit.unitCost.unit].count
+                    )
+                ),
+              },
+            },
+          });
+        }
+      } else {
+        setGameState({
+          ...gameState,
+          kills: kills - cost,
+          units: {
+            ...gameState.units,
+            [id]: {
+              ...unit,
+              count: unit.count + 1,
+              cost: Math.floor(
+                baseCost * Math.pow(baseCostIncrease, unit.count)
+              ),
+            },
           },
-        },
-      });
+        });
+      }
     }
   };
+
+  useEffect(() => {
+    setGameState({
+      ...gameState,
+      killsPerSecond: getKPSFromAllUnits(gameState),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState.units]);
 
   return {
     gameState,

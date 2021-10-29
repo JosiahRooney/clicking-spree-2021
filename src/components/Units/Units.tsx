@@ -16,6 +16,7 @@ const Units: React.FC<IProps> = ({ gameState, addUnit }) => {
         unit={unit}
         addUnit={addUnit}
         kills={gameState.kills}
+        units={gameState.units}
       />
     );
   }
