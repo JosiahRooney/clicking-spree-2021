@@ -2,7 +2,7 @@
 
 ### Todo
 
+- [x] Fix KPS display
 - [ ] Finish adding units
 - [ ] Add upgrades
-- [ ] Fix KPS display
 - [ ] Redo UI
